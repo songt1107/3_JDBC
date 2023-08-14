@@ -28,7 +28,7 @@ public class JDBCExample1 {
 		// DB 연결 정보를 담은 객체
 		// -> DMBS 타입, 이름, IP, Port, 계정명, 비밀번호 저장
 		// -> DBeaver의 계정 접속 방법과 유사함
-		// * Java와 DB 사이를 연결해주는 통로 
+		// * Java와 DB 사이를 연결해주는 통로
 		
 		
 		Statement stmt = null;
@@ -150,7 +150,10 @@ public class JDBCExample1 {
 				e.printStackTrace();
 			}
 			
+			
 		}
+		
+		
 		
 	}
 	
