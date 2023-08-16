@@ -98,7 +98,7 @@ public class JDBCExample3 {
 		
 			e.printStackTrace();
 			
-		}finally {
+		} finally {
 			
 			try {
 				
@@ -112,9 +112,7 @@ public class JDBCExample3 {
 			
 		}
 		
-		
 	}
-	
 	
 	
 }

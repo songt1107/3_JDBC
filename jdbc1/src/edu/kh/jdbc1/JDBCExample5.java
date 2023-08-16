@@ -72,7 +72,6 @@ public class JDBCExample5 {
 				}
 			}
 				
-			
 		}catch(Exception e) {
 			e.printStackTrace();	
 		}finally {
@@ -86,11 +85,9 @@ public class JDBCExample5 {
 				e.printStackTrace();	
 			}
 			
-		}
-			
+		}	
 		
 	}
-	
 	
 
 }

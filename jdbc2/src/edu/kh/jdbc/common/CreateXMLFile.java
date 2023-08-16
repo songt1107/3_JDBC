@@ -38,13 +38,11 @@ public class CreateXMLFile {
 			
 			System.out.println(fileName + ".xml 파일 생성 완료");
 			
-			
-			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
 	
+	
 }
-

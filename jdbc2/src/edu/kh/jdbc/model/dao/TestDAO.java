@@ -70,9 +70,7 @@ public class TestDAO {
 		// 7. SQL 수행 결과 반환
 		return result;
 		
-		
 	}
-	
 	
 
 }

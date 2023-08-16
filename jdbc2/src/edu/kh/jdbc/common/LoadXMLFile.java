@@ -36,7 +36,6 @@ public class LoadXMLFile {
 			
 			System.out.println(conn);
 			
-			
 			/*
 			 * 왜 XML 파일을 이용해서 DB 연결 정보를 읽어와야 할까?
 			 * 
@@ -54,7 +53,6 @@ public class LoadXMLFile {
 			 * 
 			 * 
 			 * */
-			
 			
 		} catch(Exception e) {
 			e.printStackTrace();

@@ -56,7 +56,6 @@ public class JDBCTemplate {
 				conn.setAutoCommit(false);
 			}
 			
-			
 		}catch(Exception e) {
 			System.out.println("[Connection 생성 중 예외 발생]");
 			e.printStackTrace();
