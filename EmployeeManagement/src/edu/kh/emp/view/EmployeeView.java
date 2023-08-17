@@ -84,6 +84,25 @@ public class EmployeeView {
 	}
 
 	// 주 기능 메서드
+	private void selectDeptEmp() throws Exception{
+		System.out.println("부서코드 입력(D1~D9) : ");
+		String deptCode = sc.next();
+		
+		Employee emp = service.selectDeptEmp(deptCode);
+		
+		if(emp == null) {
+			System.out.println("조회된 사원 정보가 없습니다.");
+			
+		} else {
+			System.out.println("사번 |   이름  | 주민 등록 번호 |        이메일        |   전화 번호   | 부서 | 직책 | 급여" );
+			System.out.println("------------------------------------------------------------------------------------------------");
+			
+			System.out.printf(" %2d  | %4s | %s | %20s | %s | %s | %s | %d\n",
+					emp.getEmpId(), emp.getEmpName(), emp.getEmpNo(), emp.getEmail(), 
+					emp.getPhone(), emp.getDepartmentTitle(), emp.getJobName(), emp.getSalary());
+		}
+	}
+	
 	
 	private void deleteEmployee() throws Exception{
 		System.out.println("<사번이 일치하는 사원 정보 삭제>");
@@ -273,7 +292,6 @@ public class EmployeeView {
 		sc.nextLine();
 		return empId;
 	}
-	
 	
 	
 }

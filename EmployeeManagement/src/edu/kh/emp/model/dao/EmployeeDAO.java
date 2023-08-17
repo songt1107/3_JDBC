@@ -244,5 +244,40 @@ public class EmployeeDAO {
 		
 		return result;
 	}
+
+	public int selectDeptEmp(Connection conn, String deptCode) {
+		Employee emp = null;
+		
+		try {
+			
+			String sql = prop.getProperty("selectDeptEmp");
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, deptCode);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				
+				String empName = rs.getString("EMP_NAME");
+				String empNo = rs.getString("EMP_NO");
+				String email = rs.getString("EMAIL");
+				String phone = rs.getString("PHONE");
+				String departmentTitle = rs.getString("DEPT_TITLE");
+				String jobName = rs.getString("JOB_NAME");
+				int salary = rs.getInt("SALARY");
+				
+				emp = new Employee(deptCode, empName, empNo, 
+						email, phone, departmentTitle, jobName, salary);
+				
+			}
+			
+		} finally {
+			close(stmt);
+		}
+		
+		return emp;
+	}
 	
 }

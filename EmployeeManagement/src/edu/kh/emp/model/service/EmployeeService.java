@@ -90,5 +90,18 @@ public class EmployeeService {
 		return result;
 	}
 
+	public Employee selectDeptEmp(String deptCode) {
+		
+		Connection conn = getConnection();
+		
+		int result = dao.selectDeptEmp(conn, deptCode);
+		
+		if(result > 0) commit(conn);
+		else			rollback(conn);
+		
+		close(conn);
+		return null;
+	}
+
 
 }
