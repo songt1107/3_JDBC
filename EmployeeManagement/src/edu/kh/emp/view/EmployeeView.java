@@ -85,15 +85,25 @@ public class EmployeeView {
 
 	// 주 기능 메서드
 	
-	private void deleteEmployee() {
+	private void deleteEmployee() throws Exception{
 		System.out.println("<사번이 일치하는 사원 정보 삭제>");
 		
 		int empId = inputEmpId();
 		
 		System.out.println("정말 삭제하시겠습니까?(Y/N) : ");
-		String input = sc.next();
+		char input = sc.next().toUpperCase().charAt(0);
 		
-		
+		if(input == 'Y') {
+			int result = service.deleteEmployee(empId);
+			
+			if(result > 0) {
+				System.out.println("삭제되었습니다.");
+			} else {
+				System.out.println("사번이 일치하는 사원이 존재하지 않습니다.");
+			}
+		} else {
+			System.out.println("취소되었습니다.");
+		}
 		
 	}
 
