@@ -80,7 +80,7 @@ public class EmployeeDAO {
 		
 	}
 	
-	
+	 
 	/** 새로운 사원 추가 DAO
 	 * @param conn
 	 */
@@ -245,39 +245,115 @@ public class EmployeeDAO {
 		return result;
 	}
 
+	/** 입력 받은 부서와 일치하는 모든 사원 정보 조회 DAO
+	 * @param conn
+	 * @param deptCode
+	 * @return empList
+	 */
 	public int selectDeptEmp(Connection conn, String deptCode) {
-		Employee emp = null;
-		
-		try {
-			
-			String sql = prop.getProperty("selectDeptEmp");
-			
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setString(1, deptCode);
-			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				
-				String empName = rs.getString("EMP_NAME");
-				String empNo = rs.getString("EMP_NO");
-				String email = rs.getString("EMAIL");
-				String phone = rs.getString("PHONE");
-				String departmentTitle = rs.getString("DEPT_TITLE");
-				String jobName = rs.getString("JOB_NAME");
-				int salary = rs.getInt("SALARY");
-				
-				emp = new Employee(deptCode, empName, empNo, 
-						email, phone, departmentTitle, jobName, salary);
-				
-			}
-			
-		} finally {
-			close(stmt);
-		}
-		
-		return emp;
+		List<Employee> empList = new ArrayList<>();
+        try {
+            String sql = prop.getProperty("selectDeptEmp");
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, deptCode);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Employee emp = createEmployeeFromResultSet(rs);
+                empList.add(emp);
+            }
+        } finally {
+            close(pstmt);
+        }
+        return empList;
 	}
+	
+	/** 입력 받은 급여 이상을 받는 모든 사원 정보 조회 DAO
+	 * @param conn
+	 * @param minSalary
+	 * @return empList
+	 */
+	public List<Employee> selectSalaryEmp(Connection conn, int minSalary) throws Exception {
+        List<Employee> empList = new ArrayList<>();
+        try {
+            String sql = prop.getProperty("selectSalaryEmp");
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, minSalary);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Employee emp = createEmployeeFromResultSet(rs);
+                empList.add(emp);
+            }
+        } finally {
+            close(pstmt);
+        }
+        return empList;
+    }
+	
+	/** 부서별 급여 합 전체 조회 DAO
+	 * @param conn
+	 * @return deptSalaryMap
+	 */
+	public Map<String, Integer> selectDeptTotalSalary(Connection conn) throws Exception {
+        Map<String, Integer> deptSalaryMap = new HashMap<>();
+        try {
+            String sql = prop.getProperty("selectDeptTotalSalary");
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                String deptTitle = rs.getString("DEPT_TITLE");
+                int totalSalary = rs.getInt("TOTAL_SALARY");
+                deptSalaryMap.put(deptTitle, totalSalary);
+            }
+        } finally {
+            close(stmt);
+        }
+        return deptSalaryMap;
+    }
+	
+	/** 주민등록번호가 일치하는 사원 정보 조회 DAO
+	 * @param conn
+	 * @param empNo
+	 * @return emp
+	 */
+	public Employee selectByEmpNo(Connection conn, String empNo) throws Exception {
+        Employee emp = null;
+        try {
+            String sql = prop.getProperty("selectByEmpNo");
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, empNo);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                emp = createEmployeeFromResultSet(rs);
+            }
+        } finally {
+            close(pstmt);
+        }
+        return emp;
+    }
+	
+	/** 직급별 급여 평균 조회 DAO
+	 * @param conn
+	 * @return jobAvgSalaryMap
+	 */
+	public Map<String, Double> selectJobAvgSalary(Connection conn) throws Exception {
+        Map<String, Double> jobAvgSalaryMap = new HashMap<>();
+        try {
+            String sql = prop.getProperty("selectJobAvgSalary");
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                String jobName = rs.getString("JOB_NAME");
+                double avgSalary = rs.getDouble("AVG_SALARY");
+                jobAvgSalaryMap.put(jobName, avgSalary);
+            }
+        } finally {
+            close(stmt);
+        }
+        return jobAvgSalaryMap;
+    }
+    
+    private Employee createEmployeeFromResultSet(ResultSet rs) throws SQLException {
+       
+    }
 	
 }

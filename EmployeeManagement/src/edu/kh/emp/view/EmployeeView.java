@@ -55,9 +55,7 @@ public class EmployeeView {
 				input = sc.nextInt();
 				sc.nextLine(); //  추가!
 				
-				
 				System.out.println();				
-				
 				
 				switch(input) {
 				case 1:  selectAll();   break;
@@ -65,10 +63,14 @@ public class EmployeeView {
 				case 3:  selectEmpId();   break;
 				case 4:  updateEmployee();   break;
 				case 5:  deleteEmployee();   break;
+				case 6:  selectDeptEmp();  	break;
+                case 7:	 selectSalaryEmp();	 break;
+                case 8:  selectDeptTotalSalary();   break;
+                case 9:  selectByEmpNo();   break;
+                case 10: selectJobAvgSalary();   break;
 				case 0:  System.out.println("프로그램을 종료합니다...");   break;
 				default: System.out.println("메뉴에 존재하는 번호만 입력하세요.");
 				}
-				
 				
 			}catch(InputMismatchException e) {
 				System.out.println("정수만 입력해주세요.");
@@ -84,26 +86,68 @@ public class EmployeeView {
 	}
 
 	// 주 기능 메서드
+	
+	/** 직급별 급여 평균 조회
+	 * 
+	 */
+	private void selectJobAvgSalary() throws Exception {
+        Map<String, Double> jobAvgSalaryMap = service.selectJobAvgSalary();
+
+        for (Map.Entry<String, Double> entry : jobAvgSalaryMap.entrySet()) {
+            System.out.println("직급: " + entry.getKey() + ", 평균 급여: " + entry.getValue());
+        }
+    }
+	
+	/** 주민등록번호가 일치하는 사원 정보 조회
+	 * 
+	 */
+	private void selectByEmpNo() throws Exception {
+        System.out.print("주민등록번호 입력 : ");
+        String empNo = sc.next();
+
+        Employee emp = service.selectByEmpNo(empNo);
+
+        printOne(emp);
+    }
+	
+	/** 부서별 급여 합 전체 조회
+	 * 
+	 */
+	private void selectDeptTotalSalary() throws Exception {
+        Map<String, Integer> deptSalaryMap = service.selectDeptTotalSalary();
+
+        for (Map.Entry<String, Integer> entry : deptSalaryMap.entrySet()) {
+            System.out.println("부서: " + entry.getKey() + ", 급여 합: " + entry.getValue());
+        }
+    }
+	
+	/** 입력 받은 급여 이상을 받는 모든 사원 정보 조회
+	 * 
+	 */
+	private void selectSalaryEmp() throws Exception {
+        System.out.print("최소 급여 입력 : ");
+        int minSalary = sc.nextInt();
+
+        List<Employee> empList = service.selectSalaryEmp(minSalary);
+
+        printAll(empList);
+    }
+	
+	/** 입력 받은 부서와 일치하는 모든 사원 정보 조회
+	 * 
+	 */
 	private void selectDeptEmp() throws Exception{
 		System.out.println("부서코드 입력(D1~D9) : ");
 		String deptCode = sc.next();
-		
-		Employee emp = service.selectDeptEmp(deptCode);
-		
-		if(emp == null) {
-			System.out.println("조회된 사원 정보가 없습니다.");
-			
-		} else {
-			System.out.println("사번 |   이름  | 주민 등록 번호 |        이메일        |   전화 번호   | 부서 | 직책 | 급여" );
-			System.out.println("------------------------------------------------------------------------------------------------");
-			
-			System.out.printf(" %2d  | %4s | %s | %20s | %s | %s | %s | %d\n",
-					emp.getEmpId(), emp.getEmpName(), emp.getEmpNo(), emp.getEmail(), 
-					emp.getPhone(), emp.getDepartmentTitle(), emp.getJobName(), emp.getSalary());
-		}
-	}
+
+        List<Employee> empList = service.selectDeptEmp(deptCode);
+
+        printAll(empList);
+    }
 	
-	
+	/** 사번이 일치하는 사원 정보 삭제
+	 * 
+	 */
 	private void deleteEmployee() throws Exception{
 		System.out.println("<사번이 일치하는 사원 정보 삭제>");
 		
