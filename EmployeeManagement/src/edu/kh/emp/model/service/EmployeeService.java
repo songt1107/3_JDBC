@@ -93,19 +93,10 @@ public class EmployeeService {
 
 	/** 입력 받은 부서와 일치하는 모든 사원 정보 조회 서비스
 	 * @param deptCode
-<<<<<<< HEAD
 	 * @return empList 
 	 */
 	public List<Employee> selectDeptEmp(String deptCode) throws Exception {
 		Connection conn = getConnection();
-=======
-	 * @return empList
-	 */
-	public Employee selectDeptEmp(String deptCode) {
-		
-		Connection conn = getConnection();
-		
->>>>>>> 8d38a23768ce69ae14c2cf6cd09ae809b08d1042
 		List<Employee> empList = dao.selectDeptEmp(conn, deptCode);
         close(conn);
         return empList;
@@ -154,8 +145,4 @@ public class EmployeeService {
     }
  
 
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 8d38a23768ce69ae14c2cf6cd09ae809b08d1042

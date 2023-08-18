@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -253,11 +252,7 @@ public class EmployeeDAO {
 	 * @param deptCode
 	 * @return empList
 	 */
-<<<<<<< HEAD
 	public List<Employee> selectDeptEmp(Connection conn, String deptCode) throws Exception {
-=======
-	public int selectDeptEmp(Connection conn, String deptCode) {
->>>>>>> 8d38a23768ce69ae14c2cf6cd09ae809b08d1042
 		List<Employee> empList = new ArrayList<>();
         try {
             String sql = prop.getProperty("selectDeptEmp");
@@ -359,17 +354,9 @@ public class EmployeeDAO {
         return jobAvgSalaryMap;
     }
     
-<<<<<<< HEAD
     private Employee createEmployeeFromResultSet(ResultSet rs) throws Exception {
 		return null;
        
     }
 	
 }
-=======
-    private Employee createEmployeeFromResultSet(ResultSet rs) throws SQLException {
-       
-    }
-	
-}
->>>>>>> 8d38a23768ce69ae14c2cf6cd09ae809b08d1042
