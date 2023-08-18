@@ -2,6 +2,7 @@ package edu.kh.emp.model.service;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 import static edu.kh.emp.common.JDBCTemplate.*;
 import edu.kh.emp.model.dao.EmployeeDAO;
@@ -90,18 +91,58 @@ public class EmployeeService {
 		return result;
 	}
 
-	public Employee selectDeptEmp(String deptCode) {
-		
+	/** 입력 받은 부서와 일치하는 모든 사원 정보 조회 서비스
+	 * @param deptCode
+	 * @return empList 
+	 */
+	public List<Employee> selectDeptEmp(String deptCode) throws Exception {
 		Connection conn = getConnection();
-		
-		int result = dao.selectDeptEmp(conn, deptCode);
-		
-		if(result > 0) commit(conn);
-		else			rollback(conn);
-		
-		close(conn);
-		return null;
+		List<Employee> empList = dao.selectDeptEmp(conn, deptCode);
+        close(conn);
+        return empList;
 	}
-
+	
+	/** 입력 받은 급여 이상을 받는 모든 사원 정보 조회 서비스
+	 * @param minSalary
+	 * @return empList
+	 */
+	public List<Employee> selectSalaryEmp(int minSalary) throws Exception {
+        Connection conn = getConnection();
+        List<Employee> empList = dao.selectSalaryEmp(conn, minSalary);
+        close(conn);
+        return empList;
+    }
+	
+	/** 부서별 급여 합 전체 조회 서비스
+	 * @return deptSalaryMap
+	 */
+	public Map<String, Integer> selectDeptTotalSalary() throws Exception {
+        Connection conn = getConnection();
+        Map<String, Integer> deptSalaryMap = dao.selectDeptTotalSalary(conn);
+        close(conn);
+        return deptSalaryMap;
+    }
+	
+	/** 주민등록번호가 일치하는 사원 정보 조회 서비스
+	 * @param empNo
+	 * @return emp
+	 */
+	public Employee selectByEmpNo(String empNo) throws Exception {
+        Connection conn = getConnection();
+        Employee emp = dao.selectByEmpNo(conn, empNo);
+        close(conn);
+        return emp;
+    }
+	
+	/** 직급별 급여 평균 조회 서비스
+	 * @return jobAvgSalaryMap
+	 */
+	public Map<String, Double> selectJobAvgSalary() throws Exception {
+        Connection conn = getConnection();
+        Map<String, Double> jobAvgSalaryMap = dao.selectJobAvgSalary(conn);
+        close(conn);
+        return jobAvgSalaryMap;
+    }
+ 
 
 }
