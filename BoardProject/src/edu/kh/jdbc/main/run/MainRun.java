@@ -1,5 +1,11 @@
 package edu.kh.jdbc.main.run;
 
-public class MainRun {
+import edu.kh.jdbc.main.view.MainView;
 
+public class MainRun {
+	public static void main(String[] args) {
+		new MainView().mainMenu();
+		
+	}
+	
 }
