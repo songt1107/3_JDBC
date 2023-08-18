@@ -7,7 +7,6 @@
     <fullyQualifiedTypeName name="java.sql.DriverManager"/>
     <fullyQualifiedTypeName name="edu.kh.jdbc.common.JDBCTemplate"/>
     <fullyQualifiedTypeName name="edu.kh.jdbc.model.dao.TestDAO"/>
-    <fullyQualifiedTypeName name="java.sql.SQLException"/>
     <fullyQualifiedTypeName name="edu.kh.jdbc.model.service.TestService"/>
     <fullyQualifiedTypeName name="edu.kh.jdbc.model.vo.TestVO"/>
     <fullyQualifiedTypeName name="edu.kh.emp.model.service.EmployeeService"/>
@@ -25,4 +24,7 @@
     <fullyQualifiedTypeName name="edu.kh.emp.model.vo.Employee"/>
     <fullyQualifiedTypeName name="edu.kh.emp.view.EmployeeView"/>
     <fullyQualifiedTypeName name="java.util.Scanner"/>
+    <fullyQualifiedTypeName name="java.util.Map"/>
+    <fullyQualifiedTypeName name="java.sql.SQLException"/>
+    <fullyQualifiedTypeName name="java.util.HashMap"/>
 </qualifiedTypeNameHistroy>
