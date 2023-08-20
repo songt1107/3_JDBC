@@ -1,5 +1,5 @@
 package edu.kh.emp.model.vo;
-
+ 
 // VO : 값 저장용 객체 (== DB 조회 결과 한 행을 저장)
 public class Employee {
 	private int empId;  // 사원 번호
