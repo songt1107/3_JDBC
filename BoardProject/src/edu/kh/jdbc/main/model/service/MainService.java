@@ -5,6 +5,8 @@ import static edu.kh.jdbc.common.JDBCTemplate.*;
 import java.sql.Connection;
 import java.util.List;
 
+import edu.kh.jdbc.board.model.dto.Board;
+import edu.kh.jdbc.board.model.dto.Comment;
 import edu.kh.jdbc.main.model.dao.MainDAO;
 import edu.kh.jdbc.member.model.dto.Member;
 
@@ -56,73 +58,38 @@ public class MainService {
 	    }
 	}
 	
-	/** 회원 목록 조회 서비스
-	 * 
+	
+	/** 아이디 중복 검사 서비스
+	 * @param memberId
+	 * @return result
 	 */
-	public List<Member> getMemberList() throws Exception {
-	    Connection conn = getConnection();
-	    List<Member> memberList = null;
-
-	    try {
-	        memberList = dao.selectMemberList(conn);
-	    } finally {
-	        close(conn);
-	    }
-
-	    return memberList;
+	public int idDuplicationCheck(String memberId) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		int result = dao.idDuplicationCheck(conn, memberId);
+		
+		close(conn);
+		
+		return result;
 	}
 
-	/** 내 정보 수정 서비스
-	 * @param memberId
-	 * @param newName
-	 * @param newGender
+	/** 회원가입 서비스
+	 * @param member
 	 * @return
 	 */
-	public boolean updateMyInfo(String memberId, String newName, String newGender) throws Exception {
-	    Connection conn = getConnection();
-	    boolean success = false;
-
-	    try {
-	        success = dao.updateMemberInfo(conn, memberId, newName, newGender);
-	    } finally {
-	        close(conn);
-	    }
-
-	    return success;
+	public int signUp(Member member) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		int result = dao.signUp(conn, member); // -> INSERT 수행
+		
+		// 트랜잭션 처리
+		if(result > 0) commit(conn);
+		else 			rollback(conn);
+		
+		return result;
 	}
-
-	/** 비밀번호 변경 서비스
-	 * 
-	 */
-	public boolean changePassword(String memberId, String currentPassword, String newPassword, String newPasswordConfirm) throws Exception {
-	    Connection conn = getConnection();
-	    boolean success = false;
-
-	    try {
-	        success = dao.updateMemberPassword(conn, memberId, currentPassword, newPassword, newPasswordConfirm);
-	    } finally {
-	        close(conn);
-	    }
-
-	    return success;
-	}
-
-	/** 회원 탈퇴 서비스
-	 * 
-	 */
-	public boolean withdrawMember(String memberId, String securityCode, String password) throws Exception {
-	    Connection conn = getConnection();
-	    boolean success = false;
-
-	    try {
-	        success = dao.deleteMember(conn, memberId, securityCode, password);
-	    } finally {
-	        close(conn);
-	    }
-
-	    return success;
-	}
-	
 	
 
 }

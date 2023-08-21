@@ -2,4 +2,36 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>board-sql.xml file</comment>
+
+    <!-- 게시글 목록 조회 -->
+    <entry key="getBoardList">
+	    SELECT BOARD_NO, BOARD_TITLE,
+	    TO_CHAR(CREATE_DT, 'YYYY"-"MM"-"DD HH24:MI:SS') CREATE_DT,
+	    READ_COUNT
+	    FROM BOARD
+	    ORDER BY BOARD_NO ASC
+	</entry>
+	
+	<!-- 게시글 상세 조회 -->
+	<entry key="selectBoard">
+	    SELECT BOARD_NO, BOARD_TITLE, BOARD_CONTENT, 
+	    TO_CHAR(CREATE_DT, 'YYYY"-"MM"-"DD HH24:MI:SS') CREATE_DATE, READ_COUNT
+	    FROM BOARD
+	    WHERE BOARD_NO = ?
+    </entry>
+	
+	<!-- 댓글 조회 -->
+    <entry key="selectComments">
+        SELECT COMMENT_NO, COMMENT_CONTENT, CREATE_DATE, BOARD_NO
+        FROM COMMENT
+        WHERE BOARD_NO = ?
+        ORDER BY CREATE_DATE
+    </entry>
+
+    <!-- 댓글 추가 -->
+    <entry key="insertComment">
+        INSERT INTO COMMENT(COMMENT_NO, COMMENT_CONTENT, CREATE_DATE, BOARD_NO)
+        VALUES (COMMENT_SEQ.NEXTVAL, ?, SYSDATE, ?)
+    </entry>
+    
 </properties>

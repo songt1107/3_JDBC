@@ -14,24 +14,10 @@
 	</entry>
 	
 	<!-- 회원가입 -->
-	<entry key="signup">
-		INSERT INTO "MEMBER" VALUES(SEQ_MEMBER_NO.NEXTVAL, ?, ?, ?, ?, SYSDATE, 'N')
+	<entry key="signUp">
+		INSERT INTO "MEMBER" VALUES(SEQ_MEMBER_NO.NEXTVAL, ?, ?, ?, ?, DEFAULT, DEFAULT)
 	</entry>
 	
-	<!-- 회원 목록 조회 -->
-    <entry key="selectMemberList">
-        SELECT MEMBER_ID, MEMBER_NM, MEMBER_GENDER
-        FROM MEMBER
-        WHERE UNREGISTER_FL = 'N'
-    </entry>
-    
-    <!-- 내 정보 수정 -->
-    <entry key="updateMemberInfo">
-        UPDATE MEMBER
-        SET MEMBER_NM = ?, MEMBER_GENDER = ?
-        WHERE MEMBER_ID = ?
-    </entry>
-    
     <!-- 비밀번호 변경 -->
     <entry key="updateMemberPassword">
         UPDATE MEMBER
@@ -43,7 +29,15 @@
     <entry key="deleteMember">
         UPDATE MEMBER
         SET UNREGISTER_FL = 'Y'
-        WHERE MEMBER_ID = ? AND SECURITY_CODE = ? AND MEMBER_PW = ?
+        WHERE MEMBER_PW = ?
     </entry>
+    
+    <!-- 아이디 중복 검사 -->
+    <entry key ="idDuplicationCheck">
+    	SELECT COUNT(*) FROM MEMBER
+		WHERE UNREGISTER_FL = 'N'
+		AND MEMBER_ID = ?
+    </entry>
+    
 
 </properties>

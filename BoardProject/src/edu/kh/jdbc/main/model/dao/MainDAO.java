@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import edu.kh.jdbc.board.model.dto.Board;
+import edu.kh.jdbc.board.model.dto.Comment;
 import edu.kh.jdbc.member.model.dto.Member;
 
 public class MainDAO {
@@ -142,103 +144,62 @@ public class MainDAO {
 	    return member;
 	}
 	
-	/** 회원 목록 조회 DAO
-	 * 
-	 */
-	public List<Member> selectMemberList(Connection conn) throws Exception {
-	    List<Member> memberList = new ArrayList<>();
-	    
-	    try {
-	        String sql = prop.getProperty("selectMemberList");
-	        pstmt = conn.prepareStatement(sql);
-	        rs = pstmt.executeQuery();
-	        
-	        while (rs.next()) {
-	            Member member = new Member();
-	            member.setMemberId(rs.getString("MEMBER_ID"));
-	            member.setMemberName(rs.getString("MEMBER_NM"));
-	            member.setMemberGender(rs.getString("MEMBER_GENDER"));
-	            
-	            memberList.add(member);
-	        }
-	    } finally {
-	        close(rs);
-	        close(pstmt);
-	    }
-	    
-	    return memberList;
+    /** 아이디 중복 검사 DAO
+     * @param conn
+     * @param memberId
+     * @return
+     */
+	public int idDuplicationCheck(Connection conn, String memberId) throws Exception{
+		
+		int result = 0;
+		
+		try {
+			String sql = prop.getProperty("idDuplicationCheck");
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, memberId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				result = rs.getInt(1);
+			}
+			
+		} finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		return result;
 	}
 
-	/** 내 정보 수정 DAO
-	 * 
-	 */
-	public boolean updateMemberInfo(Connection conn, String memberId, String newName, String newGender) throws Exception {
-	    boolean success = false;
-	    
-	    try {
-	        String sql = prop.getProperty("updateMemberInfo");
-	        pstmt = conn.prepareStatement(sql);
-	        pstmt.setString(1, newName);
-	        pstmt.setString(2, newGender);
-	        pstmt.setString(3, memberId);
-	        
-	        int result = pstmt.executeUpdate();
-	        if (result > 0) {
-	            success = true;
-	        }
-	    } finally {
-	        close(pstmt);
-	    }
-	    
-	    return success;
-	}
-
-	/** 비밀번호 변경 DAO
-	 * 
-	 */
-	public boolean updateMemberPassword(Connection conn, String memberId, String currentPassword, String newPassword, String newPasswordConfirm) throws Exception {
-	    boolean success = false;
-	    
-	    try {
-	        String sql = prop.getProperty("updateMemberPassword");
-	        pstmt = conn.prepareStatement(sql);
-	        pstmt.setString(1, newPassword);
-	        pstmt.setString(2, memberId);
-	        pstmt.setString(3, currentPassword);
-	        
-	        int result = pstmt.executeUpdate();
-	        if (result > 0) {
-	            success = true;
-	        }
-	    } finally {
-	        close(pstmt);
-	    }
-	    
-	    return success;
-	}
-
-	/** 회원 탈퇴 DAO
-	 * 
-	 */
-	public boolean deleteMember(Connection conn, String memberId, String securityCode, String password) throws Exception {
-	    boolean success = false;
-	    
-	    try {
-	        String sql = prop.getProperty("deleteMember");
-	        pstmt = conn.prepareStatement(sql);
-	        pstmt.setString(1, memberId);
-	        pstmt.setString(2, securityCode);
-	        pstmt.setString(3, password);
-	        
-	        int result = pstmt.executeUpdate();
-	        if (result > 0) {
-	            success = true;
-	        }
-	    } finally {
-	        close(pstmt);
-	    }
-	    
-	    return success;
-	}
 	
+	/** 회원가입 SQL 수행( INSERT )
+	 * @param conn
+	 * @param member
+	 * @return
+	 */
+	public int signUp(Connection conn, Member member) throws Exception{
+		
+		int result = 0;
+		
+		try {
+			String sql = prop.getProperty("signUp");
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, member.getMemberId());
+			pstmt.setString(2, member.getMemberPw());
+			pstmt.setString(3, member.getMemberName());
+			pstmt.setString(4, member.getMemberGender());
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
 }
