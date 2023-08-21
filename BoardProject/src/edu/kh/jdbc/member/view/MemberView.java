@@ -17,7 +17,7 @@ public class MemberView {
 	 * 
 	 */
 	public void memberMenu() {
-		
+		 
 	    int input = 0;
 
 	    do {
