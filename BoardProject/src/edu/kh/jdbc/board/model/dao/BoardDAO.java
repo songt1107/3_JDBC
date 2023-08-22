@@ -1,6 +1,6 @@
 package edu.kh.jdbc.board.model.dao;
 
-import static edu.kh.jdbc.common.JDBCTemplate.close;
+import static edu.kh.jdbc.common.JDBCTemplate.*;
 
 import java.io.FileInputStream;
 import java.sql.Connection;
@@ -12,142 +12,318 @@ import java.util.List;
 import java.util.Properties;
 
 import edu.kh.jdbc.board.model.dto.Board;
-import edu.kh.jdbc.board.model.dto.Comment;
 
 public class BoardDAO {
 	
-	private Statement stmt; // SQL 수행, 결과 반환
-	private PreparedStatement pstmt; // placeholder를 포함한 SQL 세팅/수행
-	private ResultSet rs; // SELECT 수행 결과 저장
+	// JDBC 객체 참조 변수
+	private Statement stmt;
+	private PreparedStatement pstmt;
+	private ResultSet rs;
 	
+	// XML에 작성되 SQL을 읽어와 저장할 객체를 참조하는 변수
 	private Properties prop;
 	
 	public BoardDAO() {
-		
-		// DAO 객체가 생성될 때 Xml 파일을 읽어와 Properties 객체에 저장
 		try {
 			prop = new Properties();
 			prop.loadFromXML(new FileInputStream("board-sql.xml"));
 			
-			// -> prop.getProperty("key") 호출
-			// --> value (SQL) 반환
-			
-		}catch(Exception e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/** 게시글 목록 조회 SQL 수행
+	 * @param conn
+	 * @return boardList
+	 * @throws Exception
+	 */
+	public List<Board> selectAllBoard(Connection conn) throws Exception{
 		
+		// 결과 저장용 객체 생성
+		List<Board> boardList = new ArrayList<>();
 		
+		try {
+			// SQL 작성 (Properties 이용)
+			String sql = prop.getProperty("selectAllBoard");
+			
+			// SQL 수행 후 결과 반환 받기
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			
+			// 1행씩 접근하여 컬럼 값을 얻어와 옮겨담기
+			while(rs.next()) {
+				int boardNo = rs.getInt("BOARD_NO");
+				String boardTitle = rs.getString("BOARD_TITLE");
+				String memberName = rs.getString("MEMBER_NM");
+				int readCount = rs.getInt("READ_COUNT");
+				String createDate = rs.getString("CREATE_DT");
+				int commentCount = rs.getInt("COMMENT_COUNT");
+				
+				Board board = new Board();
+				
+				board.setBoardNo(boardNo);
+				board.setBoardTitle(boardTitle);
+				board.setMemberName(memberName);
+				board.setReadCount(readCount);
+				board.setCreateDate(createDate);
+				board.setCommentCount(commentCount);
+				
+				boardList.add(board); // list에 추가
+			}
+			
+		}finally {
+			// JDBC 객체 자원 반환
+			close(rs);
+			close(stmt);
+		}
+		
+		// 결과 반환
+		return boardList;
+	}
+
+	/** 게시글 상세 조회 SQL 수행
+	 * @param conn
+	 * @param input
+	 * @return board
+	 * @throws Exception
+	 */
+	public Board selectBoard(Connection conn, int input) throws Exception {
+
+		Board board = null;
+		
+		try {
+
+			String sql = prop.getProperty("selectBoard");
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, input);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				int boardNo = rs.getInt("BOARD_NO");
+				String boardTitle = rs.getString("BOARD_TITLE");
+				String memberName = rs.getString("MEMBER_NM");
+				int readCount = rs.getInt("READ_COUNT");
+				String createDate = rs.getString("CREATE_DT");
+				String boardContent = rs.getString("BOARD_CONTENT");
+				int memberNo = rs.getInt("MEMBER_NO");
+				
+				board = new Board();
+				
+				board.setBoardNo(boardNo);
+				board.setBoardTitle(boardTitle);
+				board.setMemberName(memberName);
+				board.setReadCount(readCount);
+				board.setCreateDate(createDate);
+				board.setBoardContent(boardContent);
+				board.setMemberNo(memberNo);
+				
+			}
+			
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		return board;
+	}
+
+	/** 조회수 증가 SQL 수행
+	 * @param conn
+	 * @param input
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateReadCount(Connection conn, int input) throws Exception{
+		int result = 0;
+		
+		try {
+			String sql = prop.getProperty("updateReadCount");
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, input);
+			
+			result = pstmt.executeUpdate();
+			
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+	/** 게시글 수정 SQL 수행
+	 * @param conn
+	 * @param boardTitle
+	 * @param boardContent
+	 * @param boardNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateBoard(Connection conn, String boardTitle, 
+					String boardContent, int boardNo) throws Exception{
+		
+		int result = 0;
+		
+		try {
+			String sql = prop.getProperty("updateBoard");
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, boardTitle);
+			pstmt.setString(2, boardContent);
+			pstmt.setInt(3, boardNo);
+			
+			result = pstmt.executeUpdate();
+			
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+	/** 게시글 삭제 SQL 수행
+	 * @param conn
+	 * @param boardNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int deleteBoard(Connection conn, int boardNo) throws Exception{
+		
+		int result = 0; // 결과 저장용 변수 선언
+		
+		try {
+			String sql = prop.getProperty("deleteBoard");
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, boardNo);
+			
+			result = pstmt.executeUpdate();
+							// DDL(CREATE, ALTER, DROP) 수행도 가능
+							// 결과로 -1 반환
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+	/** 다음 게시글 번호 조회 SQL 수행
+	 * @param conn 
+	 * @return boardNo
+	 * @throws Exception
+	 */
+	public int nextBoardNo(Connection conn) throws Exception{
+		int boardNo = 0;
+		
+		try {
+			String sql = prop.getProperty("nextBoardNo");
+			
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			
+			if(rs.next()) {
+				boardNo = rs.getInt(1); // 컬럼 순서
+			}
+			
+		}finally {
+			close(rs);
+			close(stmt);
+		}
+		
+		return boardNo;
+	}
+
+	/** 게시글 삽입
+	 * @param conn
+	 * @param boardTitle
+	 * @param boardCotent
+	 * @param memberNo
+	 * @param boardNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertBoard(Connection conn, String boardTitle,
+				String boardCotent, int memberNo, int boardNo) throws Exception {
+		
+		int result = 0;
+		
+		try {
+			String sql = prop.getProperty("insertBoard");
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, boardNo);
+			pstmt.setString(2, boardTitle);
+			pstmt.setString(3, boardCotent);
+			pstmt.setInt(4, memberNo);
+			
+			result = pstmt.executeUpdate();
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+	/** 게시글 검색 DAO
+	 * @param conn
+	 * @param condition
+	 * @param query
+	 * @return boardList
+	 * @throws Exception
+	 */
+	public List<Board> searchBoard(Connection conn, int condition, String query) throws Exception{
+		
+		List<Board> boardList = new ArrayList<>();
+		
+		try {
+			String sql = prop.getProperty("searchBoard1")
+					   + prop.getProperty("searchBoard2_" + condition)
+					   + prop.getProperty("searchBoard3");
+					
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, query);
+			
+			// 3번(제목+내용)은 ?가 2개 존재하기 때문에 추가 세팅 구문 작성
+			if(condition == 3)   pstmt.setString(2, query);
+			
+			rs = pstmt.executeQuery();
+			
+			// ResultSet에 저장된 값을 List 옮겨 담기
+			while(rs.next()) {
+				
+				int boardNo = rs.getInt("BOARD_NO");
+				String boardTitle = rs.getString("BOARD_TITLE");
+				String memberName = rs.getString("MEMBER_NM");
+				int readCount = rs.getInt("READ_COUNT");
+				String createDate = rs.getString("CREATE_DT");
+				int commentCount = rs.getInt("COMMENT_COUNT");
+				
+				Board board = new Board();
+				board.setBoardNo(boardNo);
+				board.setBoardTitle(boardTitle);
+				board.setMemberName(memberName);
+				board.setReadCount(readCount);
+				board.setCreateDate(createDate);
+				board.setCommentCount(commentCount);
+				
+				boardList.add(board);
+			}
+			
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		return boardList;
 	}
 	
-	/** 게시글 목록 조회 DAO
-	 * 
-	 */
-	public List<Board> getBoardList(Connection conn) throws Exception {
-        List<Board> boardList = new ArrayList<>();
-        try {
-            String sql = prop.getProperty("getBoardList");
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                int boardNo = rs.getInt("BOARD_NO");
-                String title = rs.getString("BOARD_TITLE");
-                String createDate = rs.getString("CREATE_DT");
-                int readCount = rs.getInt("READ_COUNT");
-
-                Board board = new Board();
-                board.setBoardNo(boardNo);
-                board.setTitle(title);
-                board.setCreateDate(createDate);
-                board.setReadCount(readCount);
-
-                boardList.add(board);
-            }
-        } finally {
-            close(rs);
-            close(pstmt);
-        }
-        return boardList;
-    }
 	
-	
-	/** 게시글 상세 조회(+ 댓글 기능) DAO
-	 * 
-	 */
-    public Board selectBoard(Connection conn, int boardNo) throws Exception {
-        Board board = null;
-        String sql = prop.getProperty("selectBoard");
-
-        try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, boardNo);
-            rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                board = new Board();
-
-                board.setBoardNo(rs.getInt("BOARD_NO"));
-                board.setTitle(rs.getString("BOARD_TITLE"));
-                board.setCreateDate(rs.getString("CREATE_DATE"));
-                board.setReadCount(rs.getInt("READ_COUNT"));
-
-            }
-
-        } finally {
-            close(rs);
-            close(pstmt);
-        }
-
-        return board;
-    }
-
-    // 댓글 조회 기능
-    public List<Comment> selectComments(Connection conn, int boardNo) throws Exception {
-        List<Comment> commentList = new ArrayList<>();
-        String sql = prop.getProperty("selectComments");
-
-        try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, boardNo);
-            rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                Comment comment = new Comment();
-
-                comment.setCommentNo(rs.getInt("COMMENT_NO"));
-                comment.setCommentContent(rs.getString("COMMENT_CONTENT"));
-                comment.setCreateDate(rs.getString("CREATE_DATE"));
-
-                // 기타 필요한 필드 설정
-
-                commentList.add(comment);
-            }
-
-        } finally {
-            close(rs);
-            close(pstmt);
-        }
-
-        return commentList;
-    }
-
-    // 댓글 추가 기능
-    public int insertComment(Connection conn, Comment comment) throws Exception {
-        int result = 0;
-        String sql = prop.getProperty("insertComment");
-
-        try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, comment.getCommentContent());
-            pstmt.setInt(2, comment.getBoardNo());
-
-            result = pstmt.executeUpdate();
-
-        } finally {
-            close(pstmt);
-        }
-
-        return result;
-    }
-
 }
