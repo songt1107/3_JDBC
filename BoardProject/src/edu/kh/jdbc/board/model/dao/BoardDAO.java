@@ -91,7 +91,6 @@ public class BoardDAO {
                 board.setCreateDate(rs.getString("CREATE_DATE"));
                 board.setReadCount(rs.getInt("READ_COUNT"));
 
-                // 기타 필요한 필드 설정
             }
 
         } finally {

@@ -4,6 +4,7 @@ import static edu.kh.jdbc.common.JDBCTemplate.*;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Random;
 
 import edu.kh.jdbc.member.model.dao.MemberDAO;
 import edu.kh.jdbc.member.model.dto.Member;
@@ -44,35 +45,61 @@ public class MemberService {
 	}
 
 	/** 비밀번호 변경 서비스
-	 * 
+	 * @param current
+	 * @param newPw1
+	 * @param memberNo
+	 * @return result
 	 */
-	public boolean updatePassword(String memberId, String currentPassword, String newPassword, String newPasswordConfirm) throws Exception {
+	public int updatePassword(String current, String newPw1, int memberNo) throws Exception {
 	    Connection conn = getConnection();
-	    boolean success = false;
-
-	    try {
-	        success = dao.updateMemberPassword(conn, memberId, currentPassword, newPassword, newPasswordConfirm);
-	    } finally {
-	        close(conn);
-	    }
-
-	    return success;
+	    
+	    int result = dao.updateMemberPassword(conn, current, newPw1, memberNo);
+	    
+	    if(result > 0) commit(conn);
+	    else			rollback(conn);
+	    
+	    close(conn);
+	    
+	    return result;
 	}
 
-	/** 회원 탈퇴 서비스
-	 * 
+	/** 숫자 6자리 보안코드 생성 서비스
+	 * @return
 	 */
-	public boolean deleteMember(String pwcheck) throws Exception {
+	public String createSecurityCode() {
+		
+		StringBuffer code = new StringBuffer();
+		
+		// StringBuffer : 문자열을 추가/변경할 때 주로 사용하는 자료형
+		// StringBuffer 자료형 append 메서드를 문자열을 추가할 수 있다.
+		
+		Random ran = new Random();// 난수 생성 객체
+		
+		for(int i=0; i<6; i++) {
+			int x = ran.nextInt(10);// 0 이상 10 미만 정수 0 ~ 9
+			code.append(x); // [574021]
+			
+		}
+		
+		return code.toString();
+	}
+	
+	/** 회원 탈퇴 서비스
+	 * @param memberPw
+	 * @param memberNo
+	 * @return
+	 */
+	public int unRegisterMember(String memberPw, int memberNo) throws Exception {
 	    Connection conn = getConnection();
-	    boolean success = false;
 
-	    try {
-	        success = dao.deleteMember(conn, pwcheck);
-	    } finally {
-	        close(conn);
-	    }
-
-	    return success;
+	    int result = dao.unRegisterMember(conn, memberPw, memberNo);
+	    
+	    if(result > 0) commit(conn);
+	    else			rollback(conn);
+	    
+	    close(conn);
+	    
+	    return result;
 	}
 	
 	

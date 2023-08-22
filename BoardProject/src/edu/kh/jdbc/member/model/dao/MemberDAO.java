@@ -93,50 +93,56 @@ public class MemberDAO {
 	    return result;
 	}
 
-	/** 비밀번호 변경 DAO
-	 * 
+	/** 비밀번호 변경 SQL 수행
+	 * @param conn
+	 * @param current
+	 * @param newPw1
+	 * @param memberNo
+	 * @return result
 	 */
-	public boolean updateMemberPassword(Connection conn, String memberId, String currentPassword, String newPassword, String newPasswordConfirm) throws Exception {
-	    boolean success = false;
+	public int updateMemberPassword(Connection conn, String current, String newPw1, int memberNo) throws Exception {
 	    
+		int result = 0;
+		
 	    try {
-	        String sql = prop.getProperty("updateMemberPassword");
-	        pstmt = conn.prepareStatement(sql);
-	        pstmt.setString(1, newPassword);
-	        pstmt.setString(2, memberId);
-	        pstmt.setString(3, currentPassword);
+	        String sql = prop.getProperty("updatePassword");
 	        
-	        int result = pstmt.executeUpdate();
-	        if (result > 0) {
-	            success = true;
-	        }
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        pstmt.setString(1, newPw1);
+	        pstmt.setString(2, current);
+	        pstmt.setInt(3, memberNo);
+	        
+	        result = pstmt.executeUpdate();
+	        
 	    } finally {
 	        close(pstmt);
 	    }
 	    
-	    return success;
+	    return result;
 	}
 
 	/** 회원 탈퇴 DAO
 	 * 
 	 */
-	public boolean deleteMember(Connection conn, String pwcheck) throws Exception {
-	    boolean success = false;
-	    
+	public int unRegisterMember(Connection conn, String memberPw, int memberNo) throws Exception {
+		
+		int result = 0;
+		
 	    try {
-	        String sql = prop.getProperty("deleteMember");
-	        pstmt = conn.prepareStatement(sql);
-	        pstmt.setString(1, pwcheck);
+	        String sql = prop.getProperty("unRegisterMember");
 	        
-	        int result = pstmt.executeUpdate();
-	        if (result > 0) {
-	            success = true;
-	        }
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        pstmt.setInt(1, memberNo);
+	        pstmt.setString(2, memberPw);
+	        
+	        result = pstmt.executeUpdate();
+	        
 	    } finally {
 	        close(pstmt);
 	    }
-	    
-	    return success;
+	    return result;
 	}
 	
 }
