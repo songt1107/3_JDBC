@@ -18,7 +18,6 @@
     <fullyQualifiedTypeName name="java.sql.SQLException"/>
     <fullyQualifiedTypeName name="java.util.HashMap"/>
     <fullyQualifiedTypeName name="java.util.LinkedHashMap"/>
-    <fullyQualifiedTypeName name="edu.kh.jdbc.main.view.MainView"/>
     <fullyQualifiedTypeName name="java.util.Scanner"/>
     <fullyQualifiedTypeName name="edu.kh.jdbc.common.Session"/>
     <fullyQualifiedTypeName name="edu.kh.jdbc.main.model.service.MainService"/>
@@ -28,9 +27,19 @@
     <fullyQualifiedTypeName name="java.sql.Statement"/>
     <fullyQualifiedTypeName name="java.sql.PreparedStatement"/>
     <fullyQualifiedTypeName name="java.sql.ResultSet"/>
-    <fullyQualifiedTypeName name="java.util.Properties"/>
-    <fullyQualifiedTypeName name="java.io.FileInputStream"/>
     <fullyQualifiedTypeName name="edu.kh.jdbc.member.model.dto.Member"/>
-    <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="edu.kh.jdbc.board.model.dto.Board"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="edu.kh.jdbc.board.model.dto.Comment"/>
+    <fullyQualifiedTypeName name="java.util.Random"/>
+    <fullyQualifiedTypeName name="edu.kh.jdbc.member.view.MemberView"/>
+    <fullyQualifiedTypeName name="edu.kh.jdbc.board.view.BoardView"/>
+    <fullyQualifiedTypeName name="edu.kh.jdbc.main.view.MainView"/>
+    <fullyQualifiedTypeName name="edu.kh.jdbc.member.model.dao.MemberDAO"/>
+    <fullyQualifiedTypeName name="java.io.FileInputStream"/>
+    <fullyQualifiedTypeName name="java.util.Properties"/>
+    <fullyQualifiedTypeName name="edu.kh.jdbc.member.model.service.MemberService"/>
+    <fullyQualifiedTypeName name="edu.kh.jdbc.board.model.service.BoardService"/>
+    <fullyQualifiedTypeName name="edu.kh.jdbc.board.model.dao.BoardDAO"/>
 </qualifiedTypeNameHistroy>
