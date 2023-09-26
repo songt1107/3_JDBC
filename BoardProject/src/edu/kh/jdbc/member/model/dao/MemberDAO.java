@@ -167,8 +167,4 @@ public class MemberDAO {
 	
 	
 	
-	
-	
-	
-	
 }
